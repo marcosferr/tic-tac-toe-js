@@ -1,5 +1,5 @@
 const gameBoard = (function gameBoard() {
-  const board = [
+  let board = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
@@ -15,6 +15,9 @@ const gameBoard = (function gameBoard() {
 
     return board[line][column];
   }
+  function isEmpty(number) {
+    return getBox(number) === "";
+  }
   function emptyBoxes() {
     let plano = board.flat();
     const emptyIndexes = plano.reduce((acc, currentValue, index) => {
@@ -26,8 +29,15 @@ const gameBoard = (function gameBoard() {
     console.log(emptyIndexes);
     return emptyIndexes;
   }
+  function restart() {
+    board = [
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ];
+  }
 
-  return { setBox, getBox, emptyBoxes };
+  return { setBox, getBox, emptyBoxes, isEmpty, restart };
 })();
 
 const display = (function () {
@@ -52,10 +62,13 @@ const GameController = (function () {
   let turnoJugador = true;
 
   function play(element) {
-    if (turnoJugador) {
-      gameBoard.setBox(element.getAttribute("number"), player.marker);
+    let casillaSelected = element.getAttribute("number");
+    if (turnoJugador && gameBoard.isEmpty(casillaSelected)) {
+      gameBoard.setBox(casillaSelected, player.marker);
       turnoJugador = false;
       computerPlay();
+    } else {
+      console.log("selecciona una casilla vacia");
     }
     display.updateBoard();
   }
@@ -70,10 +83,18 @@ const GameController = (function () {
     );
     turnoJugador = true;
   }
+  function restart() {
+    gameBoard.restart();
+    display.updateBoard();
+    turnoJugador = true;
+  }
 
-  return { play };
+  return { play, restart };
 })();
 
 display.board.forEach((el) =>
   el.addEventListener("click", (evento) => GameController.play(evento.target))
 );
+document.getElementById("restartBtn").addEventListener("click", () => {
+  GameController.restart();
+});
