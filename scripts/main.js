@@ -36,8 +36,47 @@ const gameBoard = (function gameBoard() {
       ["", "", ""],
     ];
   }
+  function checkWin() {
+    // Verificar filas
+    for (let i = 0; i < 3; i++) {
+      if (
+        board[i][0] !== "" &&
+        board[i][0] === board[i][1] &&
+        board[i][1] === board[i][2]
+      ) {
+        return board[i][0];
+      }
+    }
+    // Verificar columnas
+    for (let i = 0; i < 3; i++) {
+      if (
+        board[0][i] !== "" &&
+        board[0][i] === board[1][i] &&
+        board[1][i] === board[2][i]
+      ) {
+        return board[0][i];
+      }
+    }
+    // Verificar diagonales
+    if (
+      board[0][0] !== "" &&
+      board[0][0] === board[1][1] &&
+      board[1][1] === board[2][2]
+    ) {
+      return board[0][0];
+    }
+    if (
+      board[0][2] !== "" &&
+      board[0][2] === board[1][1] &&
+      board[1][1] === board[2][0]
+    ) {
+      return board[0][2];
+    }
+    // Si no hay ganador, devolver null
+    return false;
+  }
 
-  return { setBox, getBox, emptyBoxes, isEmpty, restart };
+  return { setBox, getBox, emptyBoxes, isEmpty, restart, checkWin };
 })();
 
 const display = (function () {
@@ -63,6 +102,7 @@ const GameController = (function () {
 
   function play(element) {
     let casillaSelected = element.getAttribute("number");
+
     if (turnoJugador && gameBoard.isEmpty(casillaSelected)) {
       gameBoard.setBox(casillaSelected, player.marker);
       turnoJugador = false;
@@ -70,17 +110,24 @@ const GameController = (function () {
     } else {
       console.log("selecciona una casilla vacia");
     }
+    if (gameBoard.checkWin()) {
+      console.log(gameBoard.checkWin());
+    }
     display.updateBoard();
   }
   function computerPlay() {
     posiblesJugadas = gameBoard.emptyBoxes();
     if (posiblesJugadas.length === 0) {
       console.log("No hay mas casillas libres");
+      return "";
     }
     gameBoard.setBox(
       posiblesJugadas[Math.floor(Math.random() * posiblesJugadas.length)],
       computer.marker
     );
+    if (gameBoard.checkWin()) {
+      console.log(gameBoard.checkWin());
+    }
     turnoJugador = true;
   }
   function restart() {
