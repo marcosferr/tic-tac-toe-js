@@ -38,9 +38,7 @@ const gameBoard = (function gameBoard() {
   }
   function checkWin() {
     // Verificar filas
-    if (emptyBoxes().length === 0) {
-      return "tie";
-    }
+
     for (let i = 0; i < 3; i++) {
       if (
         board[i][0] !== "" &&
@@ -74,6 +72,9 @@ const gameBoard = (function gameBoard() {
       board[1][1] === board[2][0]
     ) {
       return board[0][2];
+    }
+    if (emptyBoxes().length === 0) {
+      return "tie";
     }
     // Si no hay ganador, devolver null
     return null;
@@ -130,7 +131,6 @@ const GameController = (function () {
     display.updateBoard();
   }
   function computerPlay() {
-    // computerAI.minimax(gameBoard.board,computer.marker)
     posiblesJugadas = gameBoard.emptyBoxes();
     if (posiblesJugadas.length === 0) {
       console.log("No hay mas casillas libres");
@@ -178,7 +178,6 @@ const computerAI = (function () {
     let posiblesJugadas = gameBoard.emptyBoxes();
 
     if (gameBoard.checkWin()) {
-      console.log(puntajes[gameBoard.checkWin()]);
       return { score: puntajes[gameBoard.checkWin()] }; // Devolver un objeto con un campo score
     }
 
@@ -195,14 +194,14 @@ const computerAI = (function () {
         const result = minimax(computerMarker);
         currentTestPlayInfo.score = result.score;
       }
-      console.log(gameBoard.emptyBoxes());
+
       gameBoard.setBox(posiblesJugadas[i], ""); // Restaurar la casilla a su estado anterior
       allTestPlayInfos.push(currentTestPlayInfo);
     }
 
     let bestTestPlay = null;
     if (marker === computerMarker) {
-      let bestScore = -Infinity;
+      let bestScore = -2;
       for (let i = 0; i < allTestPlayInfos.length; i++) {
         if (allTestPlayInfos[i].score > bestScore) {
           bestScore = allTestPlayInfos[i].score;
@@ -210,7 +209,7 @@ const computerAI = (function () {
         }
       }
     } else {
-      let bestScore = Infinity;
+      let bestScore = 2;
       for (let i = 0; i < allTestPlayInfos.length; i++) {
         if (allTestPlayInfos[i].score < bestScore) {
           bestScore = allTestPlayInfos[i].score;
