@@ -1,3 +1,5 @@
+const gameMode = document.getElementById("dificultad");
+
 const gameBoard = (function gameBoard() {
   let board = [
     ["", "", ""],
@@ -132,14 +134,23 @@ const GameController = (function () {
   }
   function computerPlay() {
     posiblesJugadas = gameBoard.emptyBoxes();
+
     if (posiblesJugadas.length === 0) {
       console.log("No hay mas casillas libres");
       return "";
     }
-    gameBoard.setBox(
-      computerAI.minimax(computer.marker).index,
-      computer.marker
-    ); // Usar el índice devuelto por minimax
+    if (gameMode.value == "imposible") {
+      gameBoard.setBox(
+        computerAI.minimax(computer.marker).index,
+        computer.marker
+      ); // Usar el índice devuelto por minimax
+    } else {
+      gameBoard.setBox(
+        posiblesJugadas[Math.floor(Math.random() * posiblesJugadas.length)],
+        computer.marker
+      ); // Usar el índice devuelto por minimax
+    }
+    //checar si se gano la partida
     if (gameBoard.checkWin()) {
       console.log(gameBoard.checkWin());
     }
