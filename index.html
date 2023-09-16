@@ -12,7 +12,14 @@
       <h1 class="container">Tic-Tac-Toe</h1>
     </header>
     <section>
-      <h2 class="container" id="ui-messages">Choose wisely</h2>
+      <h2 class="container" id="ui-messages">Juega sabiamente</h2>
+      <div>
+        <label for="dificultad">Selecciona la dificultad:</label>
+        <select id="dificultad" name="dificultad">
+          <option value="facil">Fácil</option>
+          <option value="imposible">Imposible</option>
+        </select>
+      </div>
       <div class="container" id="gameboard">
         <div class="square">
           <div number="1"></div>
@@ -28,8 +35,10 @@
       </div>
     </section>
     <div class="container"><button id="restartBtn">Restart</button></div>
+    <q class="container" id="frases"></q>
     <footer class="container">Copyright 2023 Marcos Ferreira</footer>
 
     <script src="scripts/main.js"></script>
+    <script src="scripts/quotes.js"></script>
   </body>
 </html>
